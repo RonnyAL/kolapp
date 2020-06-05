@@ -15,6 +15,11 @@ body *:not([contenteditable=""]):not([contenteditable="true"]) {
     user-select: none;
 }
 
+* {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
 @font-face {
     font-family: "Pigiarniq";
     src: url('Pigiarniq Regular.ttf')  format('truetype');
