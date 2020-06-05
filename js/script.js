@@ -1,12 +1,14 @@
 let $letter, $number, LB, $container, $btnDecrement, $btnColor, $btnEdit, $btnIncrement, $colorPicker;
 let prevLetter, prevNumber;
+let $btnFullScreen, $btnExitFullScreen, $btnFontSize;
+let fontSize = 15;
+
 const colors = [
     "red",
     "green",
     "blue",
     "yellow"
 ];
-
 
 $(document).ready(function() {
     LB = new LoddBok();
@@ -17,9 +19,27 @@ $(document).ready(function() {
     initClickHandlers();
     initInputHandlers();
     $colorPicker = $('#color-picker')
-
     $('[data-toggle="popover"]').popover();
+
+    window.onresize = function () {
+        if (isFullscreen()) {
+            $btnFullScreen.addClass('d-none');
+            $btnExitFullScreen.removeClass('d-none');
+        } else {
+            $btnFullScreen.removeClass('d-none');
+            $btnExitFullScreen.addClass('d-none');
+        }
+    };
+
 });
+
+function isFullscreen() {
+    let maxHeight = window.screen.height,
+        maxWidth = window.screen.width,
+        curHeight = window.innerHeight,
+        curWidth = window.innerWidth;
+    return (maxWidth === curWidth && maxHeight === curHeight);
+}
 
 function setElements() {
     $letter = $('#letter');
@@ -29,7 +49,9 @@ function setElements() {
     $btnColor = $('#btn-color');
     $btnEdit = $('#btn-edit');
     $btnIncrement = $('#btn-increment');
-
+    $btnFullScreen = $('#btn-fullscreen');
+    $btnExitFullScreen = $('#btn-exit-fullscreen');
+    $btnFontSize = $('#btn-fontsize');
 }
 
 function initPopover() {
@@ -41,13 +63,34 @@ function initPopover() {
     });
 
     $btnColor.on('shown.bs.popover', function () {
-        console.log("Hello!");
         $swatches = $('.swatch');
         for (let i = 0; i < $swatches.length; i++) {
             $($swatches[i]).on('click', function($this) {
                 setColor($($swatches[i]).data('color'));
             });
         }
+    });
+
+    $btnFontSize.popover({
+        html: true,
+        template: '<div id="font-size" class="popover" role="tooltip"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body align-items-center justify-content-center d-flex"></div></div>',
+        content: '<input id="slider-font-size" type="range" min="20" max="50" step="2">',
+        placement: "Bottom"
+    });
+
+    $btnFontSize.on('shown.bs.popover', function () {
+        let $slider = $('#slider-font-size');
+        $slider.val(fontSize);
+        $slider.on('input', function() {
+            fontSize = $slider.val();
+
+            $number.css({
+                fontSize: fontSize + "em"
+            });
+            $letter.css({
+                fontSize: fontSize + "em"
+            });
+        });
     });
 }
 
@@ -66,21 +109,36 @@ function initClickHandlers() {
        e.stopPropagation();
     });
 
+    $btnFontSize.click(function(e) {
+        $btnFontSize.popover('show');
+        e.stopPropagation();
+    });
+
     $number.click(function(e) {
         e.stopPropagation();
+        hidePopovers();
         prevNumber = $number.text();
     });
 
     $letter.click(function(e) {
        e.stopPropagation();
+        hidePopovers();
        prevLetter = $letter.text();
+    });
+
+    $btnFullScreen.click(function() {
+        $('body')[0].requestFullscreen();
+    });
+
+    $btnExitFullScreen.click(function() {
+        document.exitFullscreen();
     });
 
     $('body').on('click', function (e) {
         let $target = $(e.target);
         if ($target.data('toggle') !== 'popover'
             && $target.parents('.popover').length === 0) {
-            $btnColor.popover('hide');
+            hidePopovers();
         }
     });
 }
@@ -172,7 +230,7 @@ function displayLetter(letter) {
 function setColor(color) {
     $('.bg').attr( "class", "bg " + color);
     console.log(color);
-    $btnColor.popover('hide');
+    hidePopovers();
     //LB.num = 1;
     displayNumber(LB.num);
 }
@@ -181,20 +239,20 @@ function keyListener() {
     $('body').bind('keyup', function(e) {
         if (e.which == 32){//space bar
             increment();
-            $btnColor.popover('hide');
+            hidePopovers();
         } else if (e.which == 27) {
             if ("activeElement" in document)
                 document.activeElement.blur();
-            $btnColor.popover('hide');
+            hidePopovers();
         } else if (e.which == 13) {
             if ("activeElement" in document)
                 document.activeElement.blur();
         } else if (e.which == 37) {
             decrement();
-            $btnColor.popover('hide');
+            hidePopovers();
         } else if (e.which == 39) {
             increment();
-            $btnColor.popover('hide');
+            hidePopovers();
         }
     });
 }
@@ -207,4 +265,9 @@ function increment() {
 function decrement() {
     LB.subtractNum();
     displayNumber(LB.num);
+}
+
+function hidePopovers() {
+    $btnColor.popover('hide');
+    $btnFontSize.popover('hide');
 }
