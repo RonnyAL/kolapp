@@ -74,24 +74,23 @@ body *:not([contenteditable=""]):not([contenteditable="true"]) {
 
 #letter, #number {
     margin: 0;
-    font-size: 15em;
-    transition: font-size .25s;
+    font-size: 16em;
+    transition: all .25s;
     font-family: "Pigiarniq", "sans-serif" !important;
     caret-color: transparent;
 }
 
+#mainContent {
+    padding: 0 560px 0;
+    transition: all .25s;
+}
+
 #letter {
-    position: absolute;
-    top: 50%;
-    left: 25%;
-    transform: translate(-25%, -50%);
+
 }
 
 #number {
-    position: absolute;
-    top: 50%;
-    right: 25%;
-    transform: translate(25%, -50%);
+
 }
 
 #letter:focus, #number:focus {

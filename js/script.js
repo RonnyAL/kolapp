@@ -35,10 +35,8 @@ $(document).ready(function() {
 
 function isFullscreen() {
     let maxHeight = window.screen.height,
-        maxWidth = window.screen.width,
-        curHeight = window.innerHeight,
-        curWidth = window.innerWidth;
-    return (maxWidth === curWidth && maxHeight === curHeight);
+        curHeight = window.innerHeight;
+    return (maxHeight === curHeight);
 }
 
 function setElements() {
@@ -74,7 +72,7 @@ function initPopover() {
     $btnFontSize.popover({
         html: true,
         template: '<div id="font-size" class="popover" role="tooltip"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body align-items-center justify-content-center d-flex"></div></div>',
-        content: '<input id="slider-font-size" type="range" min="20" max="50" step="2">',
+        content: '<input id="slider-font-size" type="range" min="16" max="48" step="2">',
         placement: "Bottom"
     });
 
@@ -89,6 +87,12 @@ function initPopover() {
             });
             $letter.css({
                 fontSize: fontSize + "em"
+            });
+
+            let margin = parseInt(800 - fontSize * 15);
+            $('#mainContent').css({
+                paddingLeft: margin,
+                paddingRight: margin
             });
         });
     });
