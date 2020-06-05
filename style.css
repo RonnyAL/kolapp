@@ -20,6 +20,10 @@ body *:not([contenteditable=""]):not([contenteditable="true"]) {
     -moz-osx-font-smoothing: grayscale;
 }
 
+.w-40 {
+    width: 40%;
+}
+
 @font-face {
     font-family: "Pigiarniq";
     src: url('Pigiarniq Regular.ttf')  format('truetype');
@@ -78,10 +82,11 @@ body *:not([contenteditable=""]):not([contenteditable="true"]) {
     transition: all .25s;
     font-family: "Pigiarniq", "sans-serif" !important;
     caret-color: transparent;
+    line-height: 100%;
 }
 
 #mainContent {
-    padding: 0 560px 0;
+    padding: 0 600px 0;
     transition: all .25s;
 }
 

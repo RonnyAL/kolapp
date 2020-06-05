@@ -72,7 +72,7 @@ function initPopover() {
     $btnFontSize.popover({
         html: true,
         template: '<div id="font-size" class="popover" role="tooltip"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body align-items-center justify-content-center d-flex"></div></div>',
-        content: '<input id="slider-font-size" type="range" min="16" max="48" step="2">',
+        content: '<input id="slider-font-size" type="range" min="16" max="56" step="2">',
         placement: "Bottom"
     });
 
@@ -89,10 +89,11 @@ function initPopover() {
                 fontSize: fontSize + "em"
             });
 
-            let margin = parseInt(800 - fontSize * 15);
+            let paddingX = parseInt(840 - fontSize * 15);
+
             $('#mainContent').css({
-                paddingLeft: margin,
-                paddingRight: margin
+                paddingLeft: paddingX,
+                paddingRight: paddingX
             });
         });
     });
