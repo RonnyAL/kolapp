@@ -172,6 +172,20 @@ function initClickHandlers() {
         prevLetter = $letter.text();
     });
 
+    $letter.dblclick(function(e) {
+        e.stopPropagation();
+        hidePopovers();
+        $letter.attr('placeholder', 'A');
+        $letter.blur();
+    });
+
+    $number.dblclick(function(e) {
+        e.stopPropagation();
+        hidePopovers();
+        $number.attr('placeholder', '01');
+        $number.blur();
+    });
+
     $btnFullScreen.click(function() {
         $('body')[0].requestFullscreen();
     });
@@ -276,7 +290,7 @@ function displayLetter(letter) {
 }
 
 function setColor(color) {
-    $('.bg').attr( "class", "bg " + color + (nMode ? ' night' : ''));
+    $('#background').attr("class", "bg " + color + ((nMode === 'true' || nMode === true) ? ' night' : ''));
     saveToLs('color', color);
     hidePopovers();
 }
