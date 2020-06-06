@@ -29,21 +29,52 @@ body *:not([contenteditable=""]):not([contenteditable="true"]) {
     src: url('Pigiarniq Regular.ttf')  format('truetype');
 }
 
+.bg {
+    transition: background-color .25s;
+    background-color: #111;
+}
+
 .red {
     background-color: #d09ca8;
+}
+
+.bg.night.red * #letter, .bg.night.red * #number {
+    color: #d09ca8 !important;
+}
+
+.bg.night * svg {
+    color: white !important;
 }
 
 .green {
     background-color: #b0c0a6;
 }
 
+.bg.night.green * #letter, .bg.night.green * #number {
+    color: #b0c0a6 !important;
+}
+
 .yellow {
     background-color: #cdc68f;
+}
+
+.bg.night.yellow * #letter, .bg.night.yellow * #number {
+    color: #cdc68f !important;
 }
 
 .blue {
     background-color: #82a1d0;
 }
+
+.bg.night.blue * #letter, .bg.night.blue * #number {
+    color: #82a1d0 !important;
+}
+
+.bg.night {
+    background-color: #111 !important;
+}
+
+
 
 .swatch {
     width: 16px;

@@ -1,14 +1,27 @@
 let $letter, $number, LB, $container, $btnDecrement, $btnColor, $btnEdit, $btnIncrement, $colorPicker;
 let prevLetter, prevNumber;
 let $btnFullScreen, $btnExitFullScreen, $btnFontSize;
-let fontSize = 15;
+let $btnToggleNightMode;
 
-const colors = [
-    "red",
-    "green",
-    "blue",
-    "yellow"
-];
+// Get config from localStorage
+let fontSize = getFromLs('fontSize') || 15;
+let nMode = getFromLs('nMode') || false;
+console.log("nMode is " + nMode);
+let color = getFromLs('color') || 'red';
+let letter = getFromLs('letter') || 'A';
+let number = getFromLs('number') || 1;
+
+function applyConfig() {
+    setFontSize(fontSize);
+    setNightMode(nMode);
+    setColor(color);
+    LB.let = letter;
+    LB.num = number;
+    $letter.text(LB.let);
+    $number.text(LB.num);
+    displayNumber(LB.num);
+    displayLetter(LB.let);
+}
 
 $(document).ready(function() {
     LB = new LoddBok();
@@ -20,6 +33,7 @@ $(document).ready(function() {
     initInputHandlers();
     $colorPicker = $('#color-picker')
     $('[data-toggle="popover"]').popover();
+    applyConfig();
 
     window.onresize = function () {
         if (isFullscreen()) {
@@ -50,6 +64,7 @@ function setElements() {
     $btnFullScreen = $('#btn-fullscreen');
     $btnExitFullScreen = $('#btn-exit-fullscreen');
     $btnFontSize = $('#btn-fontsize');
+    $btnToggleNightMode = $('#btn-toggle-nightmode');
 }
 
 function initPopover() {
@@ -81,22 +96,40 @@ function initPopover() {
         $slider.val(fontSize);
         $slider.on('input', function() {
             fontSize = $slider.val();
-
-            $number.css({
-                fontSize: fontSize + "em"
-            });
-            $letter.css({
-                fontSize: fontSize + "em"
-            });
-
-            let paddingX = parseInt(840 - fontSize * 15);
-
-            $('#mainContent').css({
-                paddingLeft: paddingX,
-                paddingRight: paddingX
-            });
+            saveToLs('fontSize', fontSize);
+            setFontSize(fontSize);
         });
     });
+}
+
+function setFontSize(size) {
+
+    $number.css({
+        fontSize: size + "em"
+    });
+    $letter.css({
+        fontSize: size + "em"
+    });
+
+    let paddingX = parseInt(840 - size * 15);
+
+    $('#mainContent').css({
+        paddingLeft: paddingX,
+        paddingRight: paddingX
+    });
+}
+
+function setNightMode(nMode) {
+    console.log("Now nmode is " + nMode);
+    if (nMode === 'true') {
+        setTimeout(function(){
+            $('#background').addClass('night');
+        }, 100);
+    } else {
+        setTimeout(function(){
+            $('#background').removeClass('night');
+        }, 100);
+    }
 }
 
 function initClickHandlers() {
@@ -119,6 +152,14 @@ function initClickHandlers() {
         e.stopPropagation();
     });
 
+    $btnToggleNightMode.click(function(e) {
+        e.stopPropagation();
+        $('#background').toggleClass('night');
+        nMode = $('#background').hasClass('night');
+        console.log("Saving nMode = " + nMode);
+        saveToLs('nMode', nMode);
+    });
+
     $number.click(function(e) {
         e.stopPropagation();
         hidePopovers();
@@ -126,9 +167,9 @@ function initClickHandlers() {
     });
 
     $letter.click(function(e) {
-       e.stopPropagation();
+        e.stopPropagation();
         hidePopovers();
-       prevLetter = $letter.text();
+        prevLetter = $letter.text();
     });
 
     $btnFullScreen.click(function() {
@@ -175,6 +216,7 @@ function initInputHandlers() {
     $letter.on('blur', function() {
         $letter.text($letter.attr('placeholder'));
         LB.let = $letter.text();
+        saveToLs('letter', LB.let);
         displayLetter(LB.let);
     });
 
@@ -214,6 +256,7 @@ function initInputHandlers() {
     $number.on('blur', function() {
         $number.text($number.attr('placeholder'));
         LB.num = $number.text();
+        saveToLs('number', LB.num);
         displayNumber(LB.num);
     })
 }
@@ -233,11 +276,9 @@ function displayLetter(letter) {
 }
 
 function setColor(color) {
-    $('.bg').attr( "class", "bg " + color);
-    console.log(color);
+    $('.bg').attr( "class", "bg " + color + (nMode ? ' night' : ''));
+    saveToLs('color', color);
     hidePopovers();
-    //LB.num = 1;
-    displayNumber(LB.num);
 }
 
 function keyListener() {
@@ -265,14 +306,24 @@ function keyListener() {
 function increment() {
     LB.addNum();
     displayNumber(LB.num);
+    saveToLs('number', LB.num);
 }
 
 function decrement() {
     LB.subtractNum();
     displayNumber(LB.num);
+    saveToLs('number', LB.num);
 }
 
 function hidePopovers() {
     $btnColor.popover('hide');
     $btnFontSize.popover('hide');
+}
+
+function saveToLs(key, value) {
+    localStorage.setItem(key, value);
+}
+
+function getFromLs(key) {
+    return localStorage.getItem(key);
 }
