@@ -38,6 +38,10 @@ body *:not([contenteditable=""]):not([contenteditable="true"]) {
     background-color: #d09ca8;
 }
 
+.bg.night * #letter:focus, .bg.night * #number:focus {
+    border-bottom: 1px dotted rgba(255, 255, 255, .25) !important;
+}
+
 .bg.night.red * #letter, .bg.night.red * #number {
     color: #d09ca8 !important;
 }
@@ -119,14 +123,6 @@ body *:not([contenteditable=""]):not([contenteditable="true"]) {
 #mainContent {
     padding: 0 600px 0;
     transition: all .25s;
-}
-
-#letter {
-
-}
-
-#number {
-
 }
 
 #letter:focus, #number:focus {
